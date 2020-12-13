@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:traffic_weather/screens/login.dart';
+import 'package:traffic_weather/screens/splash.dart';
 
 Future main() async {
   await DotEnv().load('.env');
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginScreen(),
+      home: WeatherSplash(),
     );
   }
 }
