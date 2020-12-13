@@ -28,6 +28,8 @@ dependencies:
   cupertino_icons: ^1.0.0
   flutter_dotenv: ^2.1.0
   splashscreen:
+  http:
+  firebase_auth:
 
 dev_dependencies:
   flutter_test:
