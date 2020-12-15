@@ -30,6 +30,8 @@ dependencies:
   splashscreen:
   http:
   firebase_auth:
+  flutter_staggered_grid_view:
+  material_floating_search_bar:
 
 dev_dependencies:
   flutter_test:

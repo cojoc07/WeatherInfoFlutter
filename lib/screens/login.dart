@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:traffic_weather/screens/gallery.dart';
+import 'package:traffic_weather/screens/main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -58,7 +60,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           RaisedButton(
-            onPressed: () => {SignIn("test@test.com", "12345678")},
+            onPressed: () => {
+              /* signIn("test@test.com", "12345678") */
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => MainScreen()),
+              ),
+            },
             child: Text('Button', style: TextStyle(fontSize: 20)),
           )
         ],
@@ -67,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-Future<void> SignIn(String email, String password) async {
+Future<void> signIn(String email, String password) async {
   var apiKey = DotEnv().env['FBKEY'];
 
   var url =
