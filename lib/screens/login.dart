@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
           RaisedButton(
             onPressed: () => {
               /* signIn("test@test.com", "12345678") */
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => MainScreen()),
               ),
             },
