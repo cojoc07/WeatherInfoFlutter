@@ -7,7 +7,7 @@ class WeatherSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     return SplashScreen(
       seconds: 2,
-      navigateAfterSeconds: LoginScreen(),
+      navigateAfterSeconds: AuthScreen(),
       title: Text(
         'Weather Info Flutter',
         textScaleFactor: 2,

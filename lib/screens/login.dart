@@ -1,91 +1,50 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:traffic_weather/components/auth_card.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:traffic_weather/screens/gallery.dart';
-import 'package:traffic_weather/screens/main_screen.dart';
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  String url = DotEnv().env['HOST'];
+class AuthScreen extends StatelessWidget {
+  static const routeName = '/auth';
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(title: Text("Weather app")),
-      body: Column(
-        children: [
+      body: Stack(
+        children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 10, bottom: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/cityscape.png',
-                  height: 200,
-                )
-              ],
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                  Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [0, 1],
+              ),
             ),
           ),
-          Container(
-            width: 300,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email',
-                hintText: 'Introdu emailul',
+          SingleChildScrollView(
+            child: Container(
+              height: deviceSize.height,
+              width: deviceSize.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset('assets/images/cityscape.png', height: 200),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Flexible(
+                    flex: deviceSize.width > 600 ? 2 : 1,
+                    child: AuthCard(),
+                  ),
+                ],
               ),
-              autofocus: false,
             ),
           ),
-          SizedBox(height: 10),
-          Container(
-            width: 300,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Parola',
-                hintText: 'Introdu parola',
-              ),
-              autofocus: false,
-            ),
-          ),
-          RaisedButton(
-            onPressed: () => {
-              /* signIn("test@test.com", "12345678") */
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => MainScreen()),
-              ),
-            },
-            child: Text('Button', style: TextStyle(fontSize: 20)),
-          )
         ],
       ),
     );
   }
-}
-
-Future<void> signIn(String email, String password) async {
-  var apiKey = DotEnv().env['FBKEY'];
-
-  var url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" +
-          apiKey;
-  final response = await http.post(
-    url,
-    body: json.encode(
-      {'email': email, 'password': password, 'returnSecureToken': true},
-    ),
-  );
-
-  print(json.decode(response.body));
 }

@@ -8,16 +8,47 @@ class Auth with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
 
-  Future<void> signup(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     var apiKey = DotEnv().env['FBKEY'];
     var url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" +
         apiKey;
-    final response = await http.post(
-      url,
-      body: json.encode(
-        {'email': email, 'password': password, 'returnSecureToken': true},
-      ),
-    );
-    print(json.decode(response.body));
+
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode(
+          {'email': email, 'password': password, 'returnSecureToken': true},
+        ),
+      );
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        throw new Exception(responseData['error']['message']);
+      }
+      print(responseData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> signIn(String email, String password) async {
+    var apiKey = DotEnv().env['FBKEY'];
+    try {
+      var url =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" +
+              apiKey;
+
+      final response = await http.post(url,
+          body: json.encode(
+            {'email': email, 'password': password, 'returnSecureToken': true},
+          ));
+      final responseData = json.decode(response.body);
+      if (responseData['error'] != null) {
+        print(responseData['error']['message']);
+        throw new Exception(responseData['error']['message']);
+      }
+      print(responseData);
+    } catch (error) {
+      throw error;
+    }
   }
 }
