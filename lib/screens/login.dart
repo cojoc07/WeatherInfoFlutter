@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:traffic_weather/components/auth_card.dart';
 
+enum AuthMode { Signup, Login }
+
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
 
@@ -32,9 +34,6 @@ class AuthScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Image.asset('assets/images/cityscape.png', height: 200),
-                  SizedBox(
-                    height: 16,
-                  ),
                   Flexible(
                     flex: deviceSize.width > 600 ? 2 : 1,
                     child: AuthCard(),

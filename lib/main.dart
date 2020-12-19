@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:traffic_weather/providers/auth.dart';
 import 'package:traffic_weather/screens/splash.dart';
 
+import 'screens/main_screen.dart';
+
 Future main() async {
   await DotEnv().load('.env');
   runApp(MyApp());
@@ -14,15 +16,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [new ChangeNotifierProvider.value(value: Auth())],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: WeatherSplash(),
+    return ChangeNotifierProvider(
+      create: (context) => Auth(),
+      child: Consumer<Auth>(
+        builder: (context, cart, child) {
+          return MaterialApp(
+            title: "Demo",
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: MainScreen(),
+          );
+        },
       ),
     );
   }

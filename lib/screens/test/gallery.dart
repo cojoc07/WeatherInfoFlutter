@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:traffic_weather/screens/fullscreen_image.dart';
+import 'package:traffic_weather/screens/test/fullscreen_image.dart';
 
 class WallScreen extends StatefulWidget {
   @override

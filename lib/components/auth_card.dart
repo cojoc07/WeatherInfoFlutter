@@ -103,7 +103,7 @@ class _AuthCardState extends State<AuthCard> {
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(20.0),
       ),
       elevation: 8.0,
       child: Container(
@@ -124,7 +124,6 @@ class _AuthCardState extends State<AuthCard> {
                     if (value.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
                     }
-                    return 'Generic error';
                   },
                   onSaved: (value) {
                     _authData['email'] = value;
@@ -138,7 +137,6 @@ class _AuthCardState extends State<AuthCard> {
                     if (value.isEmpty || value.length < 5) {
                       return 'Password is too short!';
                     }
-                    return 'Generic error';
                   },
                   onSaved: (value) {
                     _authData['password'] = value;
@@ -154,7 +152,6 @@ class _AuthCardState extends State<AuthCard> {
                             if (value != _passwordController.text) {
                               return 'Passwords do not match!';
                             }
-                            return 'Generic error';
                           }
                         : null,
                   ),

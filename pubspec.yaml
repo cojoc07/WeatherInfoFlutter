@@ -32,7 +32,7 @@ dependencies:
   http:
   firebase_auth:
   flutter_staggered_grid_view:
-  provider:
+  provider: ^4.3.2+3
 
 dev_dependencies:
   flutter_test:

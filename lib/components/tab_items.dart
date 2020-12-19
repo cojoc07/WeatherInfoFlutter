@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:traffic_weather/screens/seven_days.dart';
-import 'package:traffic_weather/screens/today.dart';
-import 'package:traffic_weather/screens/tomorrow.dart';
+import 'package:traffic_weather/screens/forecast/seven_days.dart';
+import 'package:traffic_weather/screens/forecast/today.dart';
+import 'package:traffic_weather/screens/forecast/tomorrow.dart';
 
 class TabNavigationItem {
   final Widget page;
