@@ -64,9 +64,9 @@ class _TomorrowState extends State<Tomorrow> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Ziua: ${widget.max} C",
+                            Text("Ziua: ${widget.max}°C",
                                 style: TextStyle(fontSize: 24)),
-                            Text("Noaptea: ${widget.min} C",
+                            Text("Noaptea: ${widget.min}°C",
                                 style: TextStyle(fontSize: 24)),
                             SizedBox(height: 32),
                             Container(
@@ -140,13 +140,15 @@ class _TomorrowState extends State<Tomorrow> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(widget.pressure.toString()),
-                              Text(widget.humidity.toString()),
-                              Text(widget.precipChance.toString()),
-                              Text(widget.precipType.toString()),
-                              Text(widget.minApparentTemp.toString()),
-                              Text(widget.maxApparentTemp.toString()),
-                              Text(widget.sunrise.toString()),
+                              Text(widget.pressure.toString() + " hPa"),
+                              Text(widget.humidity.toString() + " %"),
+                              Text(widget.precipChance.toString() + " %"),
+                              Text(widget.precipType.toString() == "rain"
+                                  ? "Ploaie"
+                                  : "Ninsoare"),
+                              Text(widget.minApparentTemp.toString() + "°C"),
+                              Text(widget.maxApparentTemp.toString() + "°C"),
+                              Text(""),
                               Text(widget.sunset.toString()),
                             ],
                           ),

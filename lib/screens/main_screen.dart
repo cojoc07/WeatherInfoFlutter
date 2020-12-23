@@ -15,9 +15,10 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with TickerProviderStateMixin<MainScreen> {
   int _currentIndex = 0;
-
+  bool _isLoading = true;
   //weather data
   //today
   String _icon = "";
@@ -49,12 +50,6 @@ class _MainScreenState extends State<MainScreen> {
     fetchWeather();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   Future<dynamic> fetchWeather() async {
     var url = DotEnv().env['URL'];
     var token = DotEnv().env['TOKEN'];
@@ -74,23 +69,28 @@ class _MainScreenState extends State<MainScreen> {
           _min = data["daily"]["data"][0]["temperatureLow"].toInt();
           _max = data["daily"]["data"][0]["temperatureHigh"].toInt();
           //tomorrow
-          _bicon = data["daily"]["data"][0]["icon"];
-          _bmin = data["daily"]["data"][0]["temperatureMin"].toInt();
-          _bmax = data["daily"]["data"][0]["temperatureMax"].toInt();
-          _bsummary = data["daily"]["data"][0]["summary"];
-          _batmpres = data["daily"]["data"][0]["pressure"].toInt();
-          _bhumidity = data["daily"]["data"][0]["humidity"].toInt();
-          _precipChance = data["daily"]["data"][0]["precipProbability"].toInt();
-          _precipType = data["daily"]["data"][0]["precipType"];
+          _bicon = data["daily"]["data"][1]["icon"];
+          _bmin = data["daily"]["data"][1]["temperatureLow"].toInt();
+          _bmax = data["daily"]["data"][1]["temperatureHigh"].toInt();
+          _bsummary = data["daily"]["data"][1]["summary"];
+          _batmpres = data["daily"]["data"][1]["pressure"].toInt();
+          _bhumidity = data["daily"]["data"][1]["humidity"].toInt();
+          _precipChance = data["daily"]["data"][1]["precipProbability"].toInt();
+          _precipType = data["daily"]["data"][1]["precipType"];
           _bmaxapparent =
-              data["daily"]["data"][0]["apparentTemperatureMax"].toInt();
+              data["daily"]["data"][1]["apparentTemperatureMax"].toInt();
           _bminapparent =
-              data["daily"]["data"][0]["apparentTemperatureMin"].toInt();
-          _bsunrise = data["daily"]["data"][0]["sunriseTime"].toString();
-          _bsunset = data["daily"]["data"][0]["sunsetTime"].toString();
+              data["daily"]["data"][1]["apparentTemperatureMin"].toInt();
+          _bsunrise = data["daily"]["data"][1]["sunriseTime"].toString();
+          _bsunset = data["daily"]["data"][1]["sunsetTime"].toString();
+
+          print(DateTime.fromMillisecondsSinceEpoch(int.parse(_bsunrise))
+              .toString());
         },
       );
+      _isLoading = false;
     } else {
+      _isLoading = false;
       throw Exception('Failed to load data');
     }
   }
@@ -98,48 +98,56 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        child: Scaffold(
-          appBar: AppBar(title: Text("Test")),
-          body: IndexedStack(
-            index: _currentIndex,
-            children: [
-              Today(
-                icon: _icon,
-                temp: _temp,
-                apparentTemp: _apparentTemp,
-                day: _day,
-                night: _night,
-                summary: _summary,
-                min: _min,
-                max: _max,
+      child: Scaffold(
+        appBar: AppBar(title: Text("Test")),
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.orange,
+                  strokeWidth: 8,
+                ),
+              )
+            : IndexedStack(
+                index: _currentIndex,
+                children: [
+                  Today(
+                    icon: _icon,
+                    temp: _temp,
+                    apparentTemp: _apparentTemp,
+                    day: _day,
+                    night: _night,
+                    summary: _summary,
+                    min: _min,
+                    max: _max,
+                  ),
+                  Tomorrow(
+                    icon: _bicon,
+                    min: _bmin,
+                    max: _bmax,
+                    summary: _bsummary,
+                    pressure: _batmpres,
+                    humidity: _bhumidity,
+                    precipChance: _precipChance,
+                    precipType: _precipType,
+                    minApparentTemp: _bminapparent,
+                    maxApparentTemp: _bmaxapparent,
+                  ),
+                  SevenDays()
+                ],
               ),
-              Tomorrow(
-                icon: _bicon,
-                min: _bmin,
-                max: _bmax,
-                summary: _bsummary,
-                pressure: _batmpres,
-                humidity: _bhumidity,
-                precipChance: _precipChance,
-                precipType: _precipType,
-                minApparentTemp: _bminapparent,
-                maxApparentTemp: _bmaxapparent,
-              ),
-              SevenDays()
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (int index) => setState(() => _currentIndex = index),
-            items: [
-              for (final tabItem in TabNavigationItem.items)
-                BottomNavigationBarItem(
-                  icon: tabItem.icon,
-                  label: tabItem.title,
-                )
-            ],
-          ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (int index) => setState(() => _currentIndex = index),
+          items: [
+            for (final tabItem in TabNavigationItem.items)
+              BottomNavigationBarItem(
+                icon: tabItem.icon,
+                label: tabItem.title,
+              )
+          ],
         ),
-        onWillPop: () async => false);
+      ),
+      onWillPop: () async => false,
+    );
   }
 }
