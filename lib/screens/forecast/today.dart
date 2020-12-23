@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
 
 class Today extends StatefulWidget {
+  //today
+  final String icon;
+  final int temp;
+  final int apparentTemp;
+  final int day;
+  final int night;
+  final String summary;
+  final int min;
+  final int max;
+
+  const Today(
+      {Key key,
+      this.icon,
+      this.temp,
+      this.apparentTemp,
+      this.day,
+      this.night,
+      this.summary,
+      this.min,
+      this.max})
+      : super(key: key);
+
   @override
   _TodayState createState() => _TodayState();
 }
@@ -33,25 +55,37 @@ class _TodayState extends State<Today> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("ACUM",
-                                style: TextStyle(
-                                    color: Colors.blue[800],
-                                    fontWeight: FontWeight.bold)),
-                            Text("Ziua: 12 C"),
-                            Text("Noaptea: -2 C"),
-                            Text("19 C", style: TextStyle(fontSize: 28)),
-                            Text("Se simt ca 15 grade")
+                            Text(
+                              "ACUM",
+                              style: TextStyle(
+                                  color: Colors.blue[800],
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 8),
+                            Text("Ziua: " + widget.max.toString() + " ° C"),
+                            Text("Noaptea: " + widget.min.toString() + " ° C"),
+                            Row(
+                              children: [
+                                Text(widget.temp.toString(),
+                                    style: TextStyle(fontSize: 48)),
+                                Text("° C", style: TextStyle(fontSize: 28))
+                              ],
+                            ),
+                            Text("Se simt ca " +
+                                widget.apparentTemp.toString() +
+                                " grade")
                           ],
                         ),
                         Column(
                           children: [
                             Image.asset(
-                              "assets/images/cloudy.png",
+                              "assets/images/${widget.icon}.png",
                               height: 150,
                             ),
                             SizedBox(height: 4),
-                            Text("Cer innorat")
+                            Text(widget.summary)
                           ],
                         )
                       ],
@@ -82,7 +116,7 @@ class _TodayState extends State<Today> {
                         Column(
                           children: [
                             Text(
-                              "SAPTAMANA ACEASTA",
+                              "SĂPTĂMÂNA ACEASTA",
                               style: TextStyle(
                                   color: Colors.blue[800],
                                   fontWeight: FontWeight.bold),
