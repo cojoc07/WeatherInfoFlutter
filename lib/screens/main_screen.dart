@@ -10,13 +10,15 @@ import 'package:traffic_weather/screens/forecast/seven_days.dart';
 import 'forecast/today.dart';
 import 'forecast/tomorrow.dart';
 
+import '../components/search_widget.dart';
+
 class MainScreen extends StatefulWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen>
-    with TickerProviderStateMixin<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   bool _isLoading = true;
   //weather data
@@ -44,18 +46,22 @@ class _MainScreenState extends State<MainScreen>
   String _bsunrise = "";
   String _bsunset = "";
 
+  TextEditingController controller = TextEditingController();
+  bool isSearching = false;
+  bool _folded = true;
+  LatLng coords = LatLng(44.2, 27.32);
   @override
   void initState() {
     super.initState();
-    fetchWeather();
+    fetchWeather(coords.latitude, coords.longitude);
   }
 
-  Future<dynamic> fetchWeather() async {
+  Future<dynamic> fetchWeather(double lat, double long) async {
     var url = DotEnv().env['URL'];
     var token = DotEnv().env['TOKEN'];
 
-    final response = await http.get(
-        '$url/forecast/$token/44.20,27.32?exclude=hourly&lang=ro&units=si');
+    final response = await http
+        .get('$url/forecast/$token/$lat,$long?exclude=hourly&lang=ro&units=si');
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
@@ -83,9 +89,6 @@ class _MainScreenState extends State<MainScreen>
               data["daily"]["data"][1]["apparentTemperatureMin"].toInt();
           _bsunrise = data["daily"]["data"][1]["sunriseTime"].toString();
           _bsunset = data["daily"]["data"][1]["sunsetTime"].toString();
-
-          print(DateTime.fromMillisecondsSinceEpoch(int.parse(_bsunrise))
-              .toString());
         },
       );
       _isLoading = false;
@@ -97,9 +100,10 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+    var placesKey = DotEnv().env['PLACESKEY'];
+
     return WillPopScope(
       child: Scaffold(
-        appBar: AppBar(title: Text("Test")),
         body: _isLoading
             ? Center(
                 child: CircularProgressIndicator(
@@ -107,32 +111,59 @@ class _MainScreenState extends State<MainScreen>
                   strokeWidth: 8,
                 ),
               )
-            : IndexedStack(
-                index: _currentIndex,
+            : Stack(
                 children: [
-                  Today(
-                    icon: _icon,
-                    temp: _temp,
-                    apparentTemp: _apparentTemp,
-                    day: _day,
-                    night: _night,
-                    summary: _summary,
-                    min: _min,
-                    max: _max,
+                  IndexedStack(
+                    index: _currentIndex,
+                    children: [
+                      Today(
+                        icon: _icon,
+                        temp: _temp,
+                        apparentTemp: _apparentTemp,
+                        day: _day,
+                        night: _night,
+                        summary: _summary,
+                        min: _min,
+                        max: _max,
+                      ),
+                      Tomorrow(
+                        icon: _bicon,
+                        min: _bmin,
+                        max: _bmax,
+                        summary: _bsummary,
+                        pressure: _batmpres,
+                        humidity: _bhumidity,
+                        precipChance: _precipChance,
+                        precipType: _precipType,
+                        minApparentTemp: _bminapparent,
+                        maxApparentTemp: _bmaxapparent,
+                      ),
+                      SevenDays()
+                    ],
                   ),
-                  Tomorrow(
-                    icon: _bicon,
-                    min: _bmin,
-                    max: _bmax,
-                    summary: _bsummary,
-                    pressure: _batmpres,
-                    humidity: _bhumidity,
-                    precipChance: _precipChance,
-                    precipType: _precipType,
-                    minApparentTemp: _bminapparent,
-                    maxApparentTemp: _bmaxapparent,
+                  Column(
+                    children: [
+                      SizedBox(height: 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SearchMapPlaceWidget(
+                            location: LatLng(44.3, 26.09),
+                            language: 'ro',
+                            radius: 500000,
+                            strictBounds: true,
+                            apiKey: placesKey,
+                            onSelected: (Place place) async {
+                              final geolocation = await place.geolocation;
+                              coords = LatLng(geolocation.coordinates.latitude,
+                                  geolocation.coordinates.longitude);
+                              fetchWeather(coords.latitude, coords.longitude);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  SevenDays()
                 ],
               ),
         bottomNavigationBar: BottomNavigationBar(

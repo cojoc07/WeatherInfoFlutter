@@ -44,7 +44,7 @@ class _TomorrowState extends State<Tomorrow> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 8),
+            SizedBox(height: 96),
             Container(
               margin: EdgeInsets.only(left: 4, right: 4),
               child: Card(
