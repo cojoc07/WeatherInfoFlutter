@@ -8,6 +8,7 @@ class Today extends StatefulWidget {
   final int day;
   final int night;
   final String summary;
+  final String weekSummary;
   final int min;
   final int max;
 
@@ -19,6 +20,7 @@ class Today extends StatefulWidget {
       this.day,
       this.night,
       this.summary,
+      this.weekSummary,
       this.min,
       this.max})
       : super(key: key);
@@ -125,8 +127,7 @@ class _TodayState extends State<Today> {
                             Container(
                               padding: EdgeInsets.only(left: 16, right: 16),
                               width: deviceSize.width - 16,
-                              child: Text(
-                                  "Ploaie usoara de azi pana duminica, cu posibile ploi in timpul noptii si temperaturi ce urca pana la 18 grade sambata."),
+                              child: Text(widget.weekSummary),
                             ),
                           ],
                         ),

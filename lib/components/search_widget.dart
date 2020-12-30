@@ -139,7 +139,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
 
   @override
   Widget build(BuildContext context) => Container(
-        width: MediaQuery.of(context).size.width * 0.9,
+        width: MediaQuery.of(context).size.width - 16,
         child: _searchContainer(
           child: _searchInput(context),
         ),
@@ -249,9 +249,9 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
     return InputDecoration(
       hintText: this.widget.placeholder,
       border: InputBorder.none,
-      contentPadding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0),
       hintStyle: TextStyle(
-        color: widget.darkMode ? Colors.grey[100] : Colors.grey[850],
+        color: widget.darkMode ? Colors.grey[100] : Colors.grey[650],
       ),
     );
   }
@@ -259,7 +259,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
   BoxDecoration _containerDecoration() {
     return BoxDecoration(
       color: widget.darkMode ? Colors.grey[800] : Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(6.0)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0)),
       boxShadow: [
         BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 10)
       ],

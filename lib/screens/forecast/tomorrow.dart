@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Tomorrow extends StatefulWidget {
   final String icon;
@@ -38,6 +39,8 @@ class _TomorrowState extends State<Tomorrow> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final format = DateFormat.Hms();
+
     return Scaffold(
       backgroundColor: Colors.lightBlue[100],
       body: Center(
@@ -148,8 +151,14 @@ class _TomorrowState extends State<Tomorrow> {
                                   : "Ninsoare"),
                               Text(widget.minApparentTemp.toString() + "°C"),
                               Text(widget.maxApparentTemp.toString() + "°C"),
-                              Text(""),
-                              Text(widget.sunset.toString()),
+                              Text(DateFormat.Hm()
+                                  .format(DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(widget.sunrise) * 1000))
+                                  .toString()),
+                              Text(DateFormat.Hm()
+                                  .format(DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(widget.sunset) * 1000))
+                                  .toString()),
                             ],
                           ),
                         )

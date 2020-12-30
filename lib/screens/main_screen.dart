@@ -29,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   int _day = 0;
   int _night = 0;
   String _summary = "";
+  String _weekSummary = "";
   int _max = 0;
   int _min = 0;
 
@@ -71,6 +72,7 @@ class _MainScreenState extends State<MainScreen> {
           _icon = data["currently"]["icon"];
           _temp = data["currently"]["temperature"].toInt();
           _summary = data["currently"]["summary"];
+          _weekSummary = data["daily"]["summary"];
           _apparentTemp = data["currently"]["apparentTemperature"].toInt();
           _min = data["daily"]["data"][0]["temperatureLow"].toInt();
           _max = data["daily"]["data"][0]["temperatureHigh"].toInt();
@@ -123,6 +125,7 @@ class _MainScreenState extends State<MainScreen> {
                         day: _day,
                         night: _night,
                         summary: _summary,
+                        weekSummary: _weekSummary,
                         min: _min,
                         max: _max,
                       ),
@@ -137,6 +140,8 @@ class _MainScreenState extends State<MainScreen> {
                         precipType: _precipType,
                         minApparentTemp: _bminapparent,
                         maxApparentTemp: _bmaxapparent,
+                        sunrise: _bsunrise,
+                        sunset: _bsunset,
                       ),
                       SevenDays()
                     ],
@@ -159,7 +164,7 @@ class _MainScreenState extends State<MainScreen> {
                                   geolocation.coordinates.longitude);
                               fetchWeather(coords.latitude, coords.longitude);
                             },
-                          ),
+                          )
                         ],
                       ),
                     ],
