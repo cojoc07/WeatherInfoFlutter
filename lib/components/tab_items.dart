@@ -17,12 +17,12 @@ class TabNavigationItem {
   static List<TabNavigationItem> get items => [
         TabNavigationItem(
           page: Today(),
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.calendar_today),
           title: "AZI",
         ),
         TabNavigationItem(
           page: Tomorrow(),
-          icon: Icon(Icons.agriculture),
+          icon: Icon(Icons.notifications),
           title: "MÂINE",
         ),
         TabNavigationItem(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:traffic_weather/components/tab_items.dart';
+import 'package:location/location.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:traffic_weather/screens/forecast/seven_days.dart';
@@ -21,6 +22,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   bool _isLoading = true;
+  //search bar
+  String locationText = "";
   //weather data
   //today
   String _icon = "";
@@ -47,14 +50,57 @@ class _MainScreenState extends State<MainScreen> {
   String _bsunrise = "";
   String _bsunset = "";
 
-  TextEditingController controller = TextEditingController();
   bool isSearching = false;
-  bool _folded = true;
+  bool locationVisible = false;
+  String locationAddress = "";
   LatLng coords = LatLng(44.2, 27.32);
   @override
   void initState() {
     super.initState();
     fetchWeather(coords.latitude, coords.longitude);
+  }
+
+  Future<void> getLocation() async {
+    var _urlReverse = DotEnv().env['REVGEOCODE'];
+    var _token = DotEnv().env['PLACESKEY'];
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return null;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return null;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    var _lat = _locationData.latitude;
+    var _lon = _locationData.longitude;
+    print("Locatia este $_locationData");
+    final response =
+        await http.get("$_urlReverse?latlng=$_lat,$_lon&key=$_token");
+    var data = jsonDecode(response.body);
+    locationAddress = data["results"][0]["formatted_address"];
+    var words = locationAddress.split(',');
+    var street = words[words.length - 3].replaceAll("Strada", "Str.");
+    var city = words[words.length - 2].replaceAll(RegExp(r'[0-9]'), '');
+
+    locationAddress = "$street,$city";
+
+    locationVisible = true;
+    fetchWeather(_locationData.latitude, _locationData.longitude);
   }
 
   Future<dynamic> fetchWeather(double lat, double long) async {
@@ -103,7 +149,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     var placesKey = DotEnv().env['PLACESKEY'];
-
+    final deviceSize = MediaQuery.of(context).size;
     return WillPopScope(
       child: Scaffold(
         body: _isLoading
@@ -115,36 +161,41 @@ class _MainScreenState extends State<MainScreen> {
               )
             : Stack(
                 children: [
-                  IndexedStack(
-                    index: _currentIndex,
-                    children: [
-                      Today(
-                        icon: _icon,
-                        temp: _temp,
-                        apparentTemp: _apparentTemp,
-                        day: _day,
-                        night: _night,
-                        summary: _summary,
-                        weekSummary: _weekSummary,
-                        min: _min,
-                        max: _max,
-                      ),
-                      Tomorrow(
-                        icon: _bicon,
-                        min: _bmin,
-                        max: _bmax,
-                        summary: _bsummary,
-                        pressure: _batmpres,
-                        humidity: _bhumidity,
-                        precipChance: _precipChance,
-                        precipType: _precipType,
-                        minApparentTemp: _bminapparent,
-                        maxApparentTemp: _bmaxapparent,
-                        sunrise: _bsunrise,
-                        sunset: _bsunset,
-                      ),
-                      SevenDays()
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: IndexedStack(
+                      index: _currentIndex,
+                      children: [
+                        Today(
+                          icon: _icon,
+                          temp: _temp,
+                          apparentTemp: _apparentTemp,
+                          day: _day,
+                          night: _night,
+                          summary: _summary,
+                          weekSummary: _weekSummary,
+                          min: _min,
+                          max: _max,
+                        ),
+                        Tomorrow(
+                          icon: _bicon,
+                          min: _bmin,
+                          max: _bmax,
+                          summary: _bsummary,
+                          pressure: _batmpres,
+                          humidity: _bhumidity,
+                          precipChance: _precipChance,
+                          precipType: _precipType,
+                          minApparentTemp: _bminapparent,
+                          maxApparentTemp: _bmaxapparent,
+                          sunrise: _bsunrise,
+                          sunset: _bsunset,
+                        ),
+                        SevenDays()
+                      ],
+                    ),
                   ),
                   Column(
                     children: [
@@ -152,19 +203,65 @@ class _MainScreenState extends State<MainScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SearchMapPlaceWidget(
-                            location: LatLng(44.3, 26.09),
-                            language: 'ro',
-                            radius: 500000,
-                            strictBounds: true,
-                            apiKey: placesKey,
-                            onSelected: (Place place) async {
-                              final geolocation = await place.geolocation;
-                              coords = LatLng(geolocation.coordinates.latitude,
-                                  geolocation.coordinates.longitude);
-                              fetchWeather(coords.latitude, coords.longitude);
-                            },
-                          )
+                          Stack(
+                            children: [
+                              SearchMapPlaceWidget(
+                                location: LatLng(44.3, 26.09),
+                                language: 'ro',
+                                radius: 500000,
+                                strictBounds: true,
+                                apiKey: placesKey,
+                                onSelected: (Place place) async {
+                                  final geolocation = await place.geolocation;
+                                  coords = LatLng(
+                                      geolocation.coordinates.latitude,
+                                      geolocation.coordinates.longitude);
+                                  fetchWeather(
+                                      coords.latitude, coords.longitude);
+                                },
+                                onClear: () {
+                                  setState(() {
+                                    locationVisible = false;
+                                  });
+                                  FocusScope.of(context).unfocus();
+                                },
+                              ),
+                              locationVisible
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          locationVisible = false;
+                                          FocusScope.of(context).unfocus();
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 55,
+                                        width: 300,
+                                        color: Colors.white,
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: Center(
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4),
+                                                child: Container(
+                                                  width: deviceSize.width * 0.7,
+                                                  child: Text(
+                                                    "$locationAddress",
+                                                    style:
+                                                        TextStyle(fontSize: 17),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Container()
+                            ],
+                          ),
                         ],
                       ),
                     ],
@@ -182,6 +279,11 @@ class _MainScreenState extends State<MainScreen> {
               )
           ],
         ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.pin_drop_outlined),
+            onPressed: () {
+              getLocation();
+            }),
       ),
       onWillPop: () async => false,
     );

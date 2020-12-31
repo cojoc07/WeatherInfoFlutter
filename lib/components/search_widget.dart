@@ -13,6 +13,7 @@ class SearchMapPlaceWidget extends StatefulWidget {
     this.iconColor = Colors.blue,
     this.onSelected,
     this.onSearch,
+    this.onClear,
     this.language = 'en',
     this.location,
     this.radius,
@@ -37,6 +38,9 @@ class SearchMapPlaceWidget extends StatefulWidget {
 
   /// The callback that is called when the user taps on the search icon.
   final void Function(Place place) onSearch;
+
+  // Callback for changing the searchbox text value
+  final void Function() onClear;
 
   /// Language used for the autocompletion.
   ///
@@ -200,6 +204,7 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
           if (widget.hasClearButton)
             GestureDetector(
               onTap: () {
+                widget.onClear();
                 if (_crossFadeState == CrossFadeState.showSecond)
                   _textEditingController.clear();
               },
@@ -355,6 +360,16 @@ class _SearchMapPlaceWidgetState extends State<SearchMapPlaceWidget>
 
     // Calls the `onSelected` callback
     if (prediction is Place) widget.onSelected(prediction);
+  }
+
+  //test area
+  void setSearchText({String myvalue}) {
+    _textEditingController.value = TextEditingValue(
+      text: myvalue,
+      selection: TextSelection.collapsed(
+        offset: myvalue.length,
+      ),
+    );
   }
 
   /// Closes the expanded search box with predictions
