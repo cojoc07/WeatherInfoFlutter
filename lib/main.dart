@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (context, cart, child) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: "Demo",
             theme: ThemeData(
               primarySwatch: Colors.blue,

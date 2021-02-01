@@ -142,6 +142,7 @@ class _TomorrowState extends State<Tomorrow> {
                           ),
                           Container(
                             alignment: Alignment.bottomRight,
+                            margin: EdgeInsets.only(right: 16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
