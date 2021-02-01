@@ -28,6 +28,7 @@
   </ol>
 </details>
 
+<img src="flutter_screens.png" alt="Screenshots" height="600" width="944">
 
 
 <!-- ABOUT THE PROJECT -->
@@ -35,8 +36,6 @@
 
 Weather app for Android/iOS/Web built with Flutter.
 Project goal: refactoring my old weather app (Android - Java) into 2 new apps built with React Native and Flutter. 
-
-<img src="process.png" alt="Logo" height="360">
 
 See the React Native version here: https://github.com/cojoc07/WeatherInfoReactNative
 
@@ -61,6 +60,8 @@ The app was built with React Native, using the Expo framework. .
 * Google Reverse Geocoding API for transforming user position into a "Place": https://developers.google.com/maps/documentation/javascript/examples/geocoding-reverse
 * DarkSky weather API for fetching weather data: https://darksky.net/dev
 
+## What can be improved?
+* Adding global state management (Provider approach or Redux)
 
 <!-- CONTRIBUTING -->
 ## Contributing
