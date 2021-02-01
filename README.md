@@ -43,7 +43,6 @@ The app can use the device location for retrieving weather information or can us
 
 ### Built With
 
-The app was built with React Native, using the Expo framework. .
 * [Flutter](https://flutter.dev/)
 * [Dart language](https://dart.dev/)
 
