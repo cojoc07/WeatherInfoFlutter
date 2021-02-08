@@ -28,7 +28,7 @@
   </ol>
 </details>
 
-<img src="flutter_screens.png" alt="Screenshots" height="600" width="944">
+<img src="flutter_screens.png" alt="Screenshots" height="480" width="755">
 
 
 <!-- ABOUT THE PROJECT -->
