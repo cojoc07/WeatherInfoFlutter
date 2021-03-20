@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:sign_button/sign_button.dart';
-import 'package:traffic_weather/providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -34,7 +33,7 @@ class _AuthCardState extends State<AuthCard> {
         title: Text("Eroare"),
         content: Text(message),
         actions: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -57,12 +56,7 @@ class _AuthCardState extends State<AuthCard> {
 
     try {
       if (_authMode == AuthMode.Login) {
-        await Provider.of<Auth>(context, listen: false)
-            .signIn(_authData['email'], _authData['password']);
-      } else {
-        await Provider.of<Auth>(context, listen: false)
-            .signUp(_authData['email'], _authData['password']);
-      }
+      } else {}
     } catch (error) {
       var errorMessage = 'Failed to auth';
       if (error.message == 'EMAIL_EXISTS') {

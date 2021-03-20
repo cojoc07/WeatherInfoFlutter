@@ -35,6 +35,8 @@ dependencies:
   provider: ^4.3.2+3
   intl:
   location:
+  flutter_bloc:
+  equatable:
 dev_dependencies:
   flutter_test:
     sdk: flutter
